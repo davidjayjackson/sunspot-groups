@@ -1,0 +1,74 @@
+
+then type in: 
+
+mysql> SELECT User, Host, Password FROM mysql.user;
+
+
+If there is no gn@% user or gn@localhost user type this:
+
+mysql> CREATE USER 'gn'@'%' IDENTIFIED BY 'gn';
+mysql> GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON gn.* TO 'gn'@'%';
+mysql> CREATE USER 'gn'@'localhost' IDENTIFIED BY 'gn';
+mysql> GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON gn.* TO 'gn'@'localhost';
+mysql> commit;
+mysql> flush privileges;
+mysql> commit;
+
+
+looks something like this:
+-- snip --
+mysql> create user 'gn'@'localhost' identified by 'gn';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON gn.* TO 'gn'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show grants for 'gn'@'localhost';
++---------------------------------------------------------------------------------------------------
+---------+
+| Grants for gn@localhost
+         |
++---------------------------------------------------------------------------------------------------
+---------+
+| GRANT USAGE ON *.* TO 'gn'@'localhost' IDENTIFIED BY PASSWORD '*AF596826CB008FE2C73F3685A75327153
+477EE2B' |
+| GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON `gn`.* TO 'gn'@'localhost'
+         |
++---------------------------------------------------------------------------------------------------
+---------+
+2 rows in set (0.01 sec)
+
+mysql> select User, host, password from mysql.user;
++--------+-----------+-------------------------------------------+
+| User   | host      | password                                  |
++--------+-----------+-------------------------------------------+
+| root   | localhost | *0D50BF7BFA1D2A0CD5618403DA26CA75FB4F1B05 |
+| gn    | %         | *AF596826CB008FE2C73F3685A75327153477EE2B |
+| gn    | localhost | *AF596826CB008FE2C73F3685A75327153477EE2B |
++--------+-----------+-------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql>
+-- snap --
+
+CREATE DATABASE gn
+
+commit;
+
+mysql>connect gn
+
+mysql> source c:\gndb\gn_tables.sql
+mysql> describe gndb;
+
+select distinct year, substr(station,3,3), count(*)
+from gndb
+where substr(obs,1,3) = '001'
+and substr(year,1,4) >= '1610'
+and substr(year,1,4) <= '1630'
+group by year, substr(station,3,3)
+;
+
+
